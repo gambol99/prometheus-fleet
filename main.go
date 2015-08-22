@@ -150,7 +150,7 @@ func persistTargets(targets TargetGroups, filename string) error {
 		return nil
 	}
 
-	err = ioutil.WriteFile(filename, content, os.FileMode(0444))
+	err = ioutil.WriteFile(filename, content, os.FileMode(0664))
 	if err != nil {
 		glog.Errorf("Failed to write to file: '%s', error: %s", filename, err)
 		return err
