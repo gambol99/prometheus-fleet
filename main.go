@@ -26,7 +26,7 @@ import (
 	"time"
 
 	"github.com/golang/glog"
-	"gopkg.in/yaml.v2"
+	yaml "gopkg.in/yaml.v2"
 )
 
 func main() {
@@ -70,7 +70,7 @@ func main() {
 		}
 
 		// step: write the targets to file
-		if err := persistTargets(targets); err != nil {
+		if err := persistTargets(targets, config.prometheusFile); err != nil {
 			glog.Errorf("Failed to persist the targets to file: %s, error: %s", config.prometheusFile, err)
 		} else {
 			glog.V(4).Infof("Successfully wrote the targets (%d) to file: %s", len(targets.targets), config.prometheusFile)
@@ -86,7 +86,7 @@ func produceDefaultTargets(machines []*Machine) TargetGroups {
 	target := group.AddTarget(config.defaultJobName)
 	// step: iterate and place all the machine inside it
 	for _, machine := range machines {
-		target.targets = append(target.targets, fmt.Sprintf("%s:%d", machine.name, config.defaultPort))
+		target.Targets = append(target.Targets, fmt.Sprintf("%s:%d", machine.name, config.defaultPort))
 	}
 	return group
 }
@@ -108,7 +108,7 @@ func produceFilteredTargets(jobs *Jobs, machines []*Machine) TargetGroups {
 				continue
 			} else if value == job.tagValue {
 				// we can append this machine to the list of targets
-				target.targets = append(target.targets, fmt.Sprintf("%s:%d", machine.name, job.port))
+				target.Targets = append(target.Targets, fmt.Sprintf("%s:%d", machine.name, job.port))
 				// keep the tracker updates
 				added[machine.name] = true
 			}
@@ -124,7 +124,7 @@ func produceFilteredTargets(jobs *Jobs, machines []*Machine) TargetGroups {
 			target := groups.AddTarget(config.defaultJobName)
 			for _, machine := range machines {
 				if _, found := added[machine.name]; !found {
-					target.targets = append(target.targets, fmt.Sprintf("%s:%d", machine.name, config.defaultPort))
+					target.Targets = append(target.Targets, fmt.Sprintf("%s:%d", machine.name, config.defaultPort))
 				}
 			}
 		}
@@ -133,9 +133,9 @@ func produceFilteredTargets(jobs *Jobs, machines []*Machine) TargetGroups {
 	return groups
 }
 
-func persistTargets(targets TargetGroups) error {
+func persistTargets(targets TargetGroups, filename string) error {
 	// step: first we encode the structure
-	content, err := encodeTargets(targets)
+	content, err := encode(targets.targets)
 	if err != nil {
 		glog.Errorf("Failed to encode the target stucture into yaml, error: %s", err)
 		return err
@@ -147,21 +147,29 @@ func persistTargets(targets TargetGroups) error {
 		return nil
 	}
 
-	err = ioutil.WriteFile(config.prometheusFile, []byte(content), os.FileMode(0444))
+	err = ioutil.WriteFile(filename, content, os.FileMode(0444))
 	if err != nil {
-		glog.Errorf("Failed to write to file: '%s', error: %s", config.prometheusFile, err)
+		glog.Errorf("Failed to write to file: '%s', error: %s", filename, err)
 		return err
 	}
 
 	return nil
 }
 
-func encodeTargets(group TargetGroups) (string, error) {
-	output, err := yaml.Marshal(group.targets)
+func encode(data interface{}) (output []byte, err error) {
+	output, err = yaml.Marshal(data)
 	if err != nil {
-		glog.Errorf("Failed to marshall the structure to json, %s, error: %s", group, err)
-		return "", fmt.Errorf("marshalling failure, data: %V, error: %s", group, err)
+		glog.Errorf("Failed to marshall the structure to yaml, %s, error: %s", data, err)
+		return []byte{}, fmt.Errorf("marshalling failure, data: %V, error: %s", data, err)
 	}
+	return
+}
 
-	return string(output), nil
+func decode(input []byte, data interface{}) error {
+	err := yaml.Unmarshal(input, data)
+	if err != nil {
+		glog.Errorf("Failed to unmarshall the content into a struct, %s, error: %s", data, err)
+		return err
+	}
+	return nil
 }

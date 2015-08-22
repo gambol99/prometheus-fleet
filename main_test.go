@@ -50,8 +50,8 @@ func TestDefaultGroup(t *testing.T) {
 	targets := produceDefaultTargets(machines)
 	assert.NotNil(t, targets)
 	assert.Equal(t, 1, targets.Size())
-	assert.Equal(t, "nodes", targets.targets[0].labels["job"])
-	assert.Equal(t, len(machines), len(targets.targets[0].targets))
+	assert.Equal(t, "nodes", targets.targets[0].Labels["job"])
+	assert.Equal(t, len(machines), len(targets.targets[0].Targets))
 }
 
 func TestFilterGroup(t *testing.T) {
@@ -63,10 +63,10 @@ func TestFilterGroup(t *testing.T) {
 	targets := produceFilteredTargets(&jobs, machines)
 	assert.NotNil(t, targets)
 	assert.Equal(t, 2, targets.Size())
-	assert.Equal(t, 3, len(targets.targets[0].targets))
-	assert.Equal(t, 3, len(targets.targets[1].targets))
-	assert.Equal(t, "compute", targets.targets[0].labels["job"])
-	assert.Equal(t, "etcd", targets.targets[1].labels["job"])
+	assert.Equal(t, 3, len(targets.targets[0].Targets))
+	assert.Equal(t, 3, len(targets.targets[1].Targets))
+	assert.Equal(t, "compute", targets.targets[0].Labels["job"])
+	assert.Equal(t, "etcd", targets.targets[1].Labels["job"])
 }
 
 func TestFilterWithDefaults(t *testing.T) {
@@ -78,14 +78,34 @@ func TestFilterWithDefaults(t *testing.T) {
 	targets := produceFilteredTargets(&jobs, machines)
 	assert.NotNil(t, targets)
 	assert.Equal(t, 2, targets.Size())
-	assert.Equal(t, 3, len(targets.targets[0].targets))
-	assert.Equal(t, 3, len(targets.targets[1].targets))
-	assert.Equal(t, "compute", targets.targets[0].labels["job"])
-	assert.Equal(t, config.defaultJobName, targets.targets[1].labels["job"])
+	assert.Equal(t, 3, len(targets.targets[0].Targets))
+	assert.Equal(t, 3, len(targets.targets[1].Targets))
+	assert.Equal(t, "compute", targets.targets[0].Labels["job"])
+	assert.Equal(t, config.defaultJobName, targets.targets[1].Labels["job"])
+}
+
+func TestEncode(t *testing.T) {
+	var target Target
+	target.Targets = []string{"10.100.20.100:9100", "10.100.20.100:9100", "10.100.20.100:9100"}
+	target.Labels = map[string]string{
+		"job": "test",
+	}
+	content, err := encode(target)
+	assert.Nil(t, err)
+	assert.NotEmpty(t, content)
+	assert.NotEqual(t, 0, len(content))
+
+	var decodeTarget Target
+
+	err = decode(content, &decodeTarget)
+	assert.Nil(t, err)
+	assert.Equal(t, 3, len(decodeTarget.Targets))
+	assert.Equal(t, 1, len(decodeTarget.Labels))
+
 }
 
 func TestEncodeTargets(t *testing.T) {
-	content, err := encodeTargets(createFakeTargets(t))
+	content, err := encode(createFakeTargets(t).targets)
 	assert.Nil(t, err)
 	assert.NotEmpty(t, content)
 	assert.NotEqual(t, 0, len(content))

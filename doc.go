@@ -63,9 +63,9 @@ type TargetGroups struct {
 // Target ... is the structure for prometheus endpoints
 type Target struct {
 	// the array of hosts within this target
-	targets []string `yaml:"targets",json:"targets"`
+	Targets []string `yaml:"targets""`
 	// the labels associated to these targets
-	labels map[string]string `yaml:"labels",json:"labels"`
+	Labels map[string]string `yaml:"labels"`
 }
 
 // String ... returns a string representation of a Machine
@@ -81,8 +81,8 @@ func (r TargetGroups) Size() int {
 // AddTarget ... create a new target for you, add to the group and return it
 func (r *TargetGroups) AddTarget(name string) *Target {
 	target := &Target{
-		targets: make([]string, 0),
-		labels: map[string]string{
+		Targets: make([]string, 0),
+		Labels: map[string]string{
 			"job": name,
 		},
 	}

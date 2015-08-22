@@ -32,8 +32,6 @@ var config struct {
 	dryRun bool
 	// include all nodes, even those not defined in a job
 	includeAll bool
-	// marshall the content into json
-	jsonContent bool
 	// the job name of the default group
 	defaultJobName string
 	// the default port to use for default jobs
@@ -50,9 +48,7 @@ func init() {
 	flag.StringVar(&config.prometheusFile, "config", "/etc/prometheus/targets.d/nodes.yaml", "the location to write the nodes configuration")
 	flag.StringVar(&config.defaultJobName, "group", "nodes", "the job name of the default group, i.e. those hosts not matched by a tag")
 	flag.IntVar(&config.defaultPort, "port", 9100, "the port to use for machines which have been placed into the default group")
-	flag.BoolVar(&config.jsonContent, "json", false, "produce the targets file in json rather than default yaml")
 	flag.BoolVar(&config.includeAll, "all", false, "include all nodes, even those not matched by a job spec; these will be placed into the default group")
 	flag.BoolVar(&config.dryRun, "dryrun", false, "perform a dry run and display the output to screen")
 	flag.Var(config.jobs, "job", "add a job to group the machines (i.e. 'name;tag=value;port[;labels]')")
-
 }
