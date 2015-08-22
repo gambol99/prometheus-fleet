@@ -1,0 +1,23 @@
+
+[Unit]
+Description=Prometheus Node Exporter
+Documentation=https://github.com/prometheus/node_exporter
+Requires=fleet.service
+Requires=docker.service
+After=fleet.service
+After=docker.service
+
+[Service]
+EnvironmentFile=/etc/environment
+Restart=on-failure
+RestartSec=5
+TimeoutStartSec=0
+
+ExecStartPre=/usr/bin/docker pull prom/node-exporter
+ExecStart=/usr/bin/docker run \
+  --name node-exporter --net=host \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  prom/node-exporter
+
+[X-Fleet]
+Global=true
