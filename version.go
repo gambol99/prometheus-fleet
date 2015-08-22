@@ -17,7 +17,7 @@ limitations under the License.
 package main
 
 const (
-	Version = "0.0.0"
+	Version = "0.0.1"
 	Prog    = "Prometheus Fleet"
 	GitSha  = ""
 )

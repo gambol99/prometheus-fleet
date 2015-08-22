@@ -8,7 +8,7 @@
 NAME=prometheus-fleet
 AUTHOR=gambol99
 HARDWARE=$(shell uname -m)
-VERSION=$(shell awk '/const Version/ { print $$4 }' version.go | sed 's/"//g')
+VERSION=$(shell awk '/Version =/ { print $$3 }' version.go | sed 's/"//g')
 
 .PHONY: build docker release static test full-test clean
 
@@ -36,7 +36,12 @@ test:
 
 all: clean build docker
 
+release: static
+	mkdir -p release
+	gzip -c bin/${NAME} > release/${NAME}_${VERSION}_linux_${HARDWARE}.gz
+	rm -f release/${NAME}
+
 clean:
-	rm -f ./stage/${NAME}
+	rm -f ./bin/${NAME}
 	rm -rf ./release
 	go clean
