@@ -35,9 +35,9 @@ spec:
         - name: tokens
           mountPath: /etc/tokens/node-register.token
       - name: prometheus-fleet
-        image: gambol99/prometheus-fleet
+        image: gambol99/prometheus-fleet:0.0.1
         args:
-          - -config=/etc/prometheus/targets.d/fleet-nodes.yaml
+          - -config=/etc/prometheus/targets.d/fleet-nodes.yml
           - -job=compute;role=kubernetes;9100
           - -job=etcd;role=etcd;9100
           - -job=ceph_store;role=ceph_store;9100

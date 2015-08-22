@@ -29,6 +29,7 @@ func TestJobsSet(t *testing.T) {
 	assert.NotNil(t, jobs.Set("come;role=kube;"))
 	assert.NotNil(t, jobs.Set("come;role=kube;jki"))
 	assert.Nil(t, jobs.Set("\"come;role=value;8000\""))
+	assert.Nil(t, jobs.Set("com_e;role=val_ue;8000"))
 }
 
 func TestJobsSize(t *testing.T) {
