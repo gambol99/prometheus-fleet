@@ -10,7 +10,7 @@ AUTHOR=gambol99
 HARDWARE=$(shell uname -m)
 VERSION=$(shell awk '/Version =/ { print $$3 }' version.go | sed 's/"//g')
 
-.PHONY: build docker release static test full-test clean
+.PHONY: build docker docker-release release static test full-test clean
 
 default: build
 
@@ -25,6 +25,10 @@ static:
 
 docker: clean static
 	sudo docker build -t ${AUTHOR}/${NAME} .
+
+docker-release: docker 
+	sudo docker tag -f ${AUTHOR}/${NAME} docker.io/${AUTHOR}/${NAME}:${VERSION}
+	sudo docker push docker.io/${AUTHOR}/${NAME}:${VERSION}
 
 full-test: build
 	go get gopkg.in/yaml.v2

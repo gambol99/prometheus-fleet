@@ -32,7 +32,7 @@ spec:
       - name: prometheus-fleet
         image: gambol99/prometheus-fleet
         args:
-	        - -config=/etc/prometheus/targets.d/fleet-nodes.yaml
+          - -config=/etc/prometheus/targets.d/fleet-nodes.yaml
           - -job='compute;role=kubernetes;9100'
           - -job='etcd;role=etcd;9100'
           - -job='ceph_store;role=ceph_store;9100'
@@ -42,7 +42,7 @@ spec:
           - -v=3
         volumeMounts:
         - name: fleet
-	      mountPath: /var/run/fleet.socket
+          mountPath: /var/run/fleet.sock
         - name: targets
           mountPath: /etc/prometheus/targets.d
       - name: prometheus
@@ -64,4 +64,4 @@ spec:
           emptyDir: {}
       - name: fleet
         hostPath:
-	      path: /var/run/fleet.socket
+        path: /var/run/fleet.sock
