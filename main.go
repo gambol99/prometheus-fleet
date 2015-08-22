@@ -17,16 +17,16 @@ limitations under the License.
 package main
 
 import (
-	"fmt"
 	"flag"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
 
-	"gopkg.in/yaml.v2"
 	"github.com/golang/glog"
+	"gopkg.in/yaml.v2"
 )
 
 func main() {
@@ -72,16 +72,16 @@ func main() {
 		// step: write the targets to file
 		if err := persistTargets(targets); err != nil {
 			glog.Errorf("Failed to persist the targets to file: %s, error: %s", config.prometheusFile, err)
-		} else{
+		} else {
 			glog.V(4).Infof("Successfully wrote the targets (%d) to file: %s", len(targets.targets), config.prometheusFile)
 		}
 
-		NEXT_LOOP:
-		<- time.After(config.interval)
+	NEXT_LOOP:
+		<-time.After(config.interval)
 	}
 }
 
-func produceDefaultTargets(machines []*Machine) (TargetGroups) {
+func produceDefaultTargets(machines []*Machine) TargetGroups {
 	var group TargetGroups
 	target := group.AddTarget(config.defaultJobName)
 	// step: iterate and place all the machine inside it
@@ -91,7 +91,7 @@ func produceDefaultTargets(machines []*Machine) (TargetGroups) {
 	return group
 }
 
-func produceFilteredTargets(jobs *Jobs, machines []*Machine) (TargetGroups) {
+func produceFilteredTargets(jobs *Jobs, machines []*Machine) TargetGroups {
 	var groups TargetGroups
 	// we use a map to keep track of the machines which have been added to a group
 	added := make(map[string]bool, 0)

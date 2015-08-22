@@ -45,7 +45,7 @@ var config struct {
 func init() {
 	config.jobs = new(Jobs)
 	config.jobs.items = make([]Job, 0)
-	flag.DurationVar(&config.interval, "interval", time.Duration(10) * time.Second, "the interval to check with fleet for machines")
+	flag.DurationVar(&config.interval, "interval", time.Duration(10)*time.Second, "the interval to check with fleet for machines")
 	flag.StringVar(&config.fleetSocket, "socket", "unix://var/run/fleet.sock", "the path to the fleet api socket")
 	flag.StringVar(&config.prometheusFile, "config", "/etc/prometheus/targets.d/nodes.yaml", "the location to write the nodes configuration")
 	flag.StringVar(&config.defaultJobName, "group", "nodes", "the job name of the default group, i.e. those hosts not matched by a tag")

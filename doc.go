@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 package main
+
 import "fmt"
 
 // Job ...A job in this context provides a means to slice up the machines in fleet into prometheus jobs
@@ -53,13 +54,13 @@ type Machine struct {
 	metadata map[string]string
 }
 
-// TargetGroup ... is just a array of target and use more an a help wrapper than anything else
+// TargetGroups ... is just a array of target and use more an a help wrapper than anything else
 type TargetGroups struct {
 	// an array of targets
 	targets []*Target
 }
 
-// Targets ... is the structure for prometheus endpoints
+// Target ... is the structure for prometheus endpoints
 type Target struct {
 	// the array of hosts within this target
 	targets []string `yaml:"targets",json:"targets"`
@@ -72,20 +73,19 @@ func (r Machine) String() string {
 	return fmt.Sprintf("machine: %s, metadata: %s", r.name, r.metadata)
 }
 
+// Size ... the number of targets in the Target Group
 func (r TargetGroups) Size() int {
 	return len(r.targets)
 }
 
+// AddTarget ... create a new target for you, add to the group and return it
 func (r *TargetGroups) AddTarget(name string) *Target {
 	target := &Target{
 		targets: make([]string, 0),
-		labels:  map[string]string {
-			"job" : name,
+		labels: map[string]string{
+			"job": name,
 		},
 	}
 	r.targets = append(r.targets, target)
 	return target
 }
-
-
-

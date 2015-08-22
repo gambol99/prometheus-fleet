@@ -60,7 +60,7 @@ func newFleetClient() (*fleetClient, error) {
 	service.httpClient = &http.Client{
 		Timeout: time.Duration(10) * time.Second,
 		Transport: &http.Transport{
-			Dial:	func(network, addr string) (net.Conn, error) {
+			Dial: func(network, addr string) (net.Conn, error) {
 				return net.Dial("unix", socket_path)
 			},
 			DisableKeepAlives: true,

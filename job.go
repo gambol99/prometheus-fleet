@@ -18,8 +18,8 @@ package main
 
 import (
 	"fmt"
-	"strconv"
 	"regexp"
+	"strconv"
 )
 
 var (
@@ -27,7 +27,7 @@ var (
 )
 
 func (r Job) String() string {
-	return fmt.Sprintf("name: %s, labels: %V, targets: %v", r.name, r.labels, r.targets)
+	return fmt.Sprintf("name: %s, labels: %v, targets: %v", r.name, r.labels, r.targets)
 }
 
 // Jobs ... is an array of job items to perform
@@ -45,6 +45,7 @@ func (r Jobs) String() string {
 	return fmt.Sprintf("jobs: %d", len(r.items))
 }
 
+// Set ... implements the method for the flag interface to allow for multiple repetitions
 func (r *Jobs) Set(value string) error {
 	var err error
 	// check: ensure it matches the regex for a job spec
@@ -54,10 +55,10 @@ func (r *Jobs) Set(value string) error {
 
 	matches := jobRegex.FindAllStringSubmatch(value, -1)
 	job := Job{
-		name:    matches[0][1],
-		tagName: matches[0][2],
+		name:     matches[0][1],
+		tagName:  matches[0][2],
 		tagValue: matches[0][3],
-		labels:  make(map[string]string, 0),
+		labels:   make(map[string]string, 0),
 	}
 
 	// step: parse the port and check it
@@ -73,4 +74,3 @@ func (r *Jobs) Set(value string) error {
 
 	return nil
 }
-

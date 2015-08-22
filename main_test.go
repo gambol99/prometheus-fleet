@@ -23,7 +23,7 @@ import (
 )
 
 func createFakeTargets(t *testing.T) TargetGroups {
-	client, _ := NewFakeFleetClient()
+	client, _ := newFakeFleetClient()
 	machines, _ := client.GetMachines()
 	targets := produceDefaultTargets(machines)
 	if targets.Size() == 0 {
@@ -33,19 +33,19 @@ func createFakeTargets(t *testing.T) TargetGroups {
 }
 
 func TestNewFakeFleetClient(t *testing.T) {
-	client, _ := NewFakeFleetClient()
+	client, _ := newFakeFleetClient()
 	assert.NotNil(t, client)
 }
 
 func TestGetMachines(t *testing.T) {
-	client, _ := NewFakeFleetClient()
+	client, _ := newFakeFleetClient()
 	machines, err := client.GetMachines()
 	assert.Nil(t, err)
 	assert.NotEqual(t, 0, len(machines))
 }
 
 func TestDefaultGroup(t *testing.T) {
-	client, _ := NewFakeFleetClient()
+	client, _ := newFakeFleetClient()
 	machines, _ := client.GetMachines()
 	targets := produceDefaultTargets(machines)
 	assert.NotNil(t, targets)
@@ -56,7 +56,7 @@ func TestDefaultGroup(t *testing.T) {
 
 func TestFilterGroup(t *testing.T) {
 	var jobs Jobs
-	client, _ := NewFakeFleetClient()
+	client, _ := newFakeFleetClient()
 	machines, _ := client.GetMachines()
 	jobs.Set("compute;role=kube;9001")
 	jobs.Set("etcd;role=etcd;9001")
@@ -71,7 +71,7 @@ func TestFilterGroup(t *testing.T) {
 
 func TestFilterWithDefaults(t *testing.T) {
 	var jobs Jobs
-	client, _ := NewFakeFleetClient()
+	client, _ := newFakeFleetClient()
 	machines, _ := client.GetMachines()
 	config.includeAll = true
 	jobs.Set("compute;role=kube;9001")

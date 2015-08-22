@@ -21,51 +21,48 @@ var (
 		&Machine{
 			name: "10.50.20.100",
 			metadata: map[string]string{
-				"role" : "kube",
+				"role": "kube",
 			},
 		},
 		&Machine{
 			name: "10.50.21.100",
 			metadata: map[string]string{
-				"role" : "kube",
+				"role": "kube",
 			},
 		},
 		&Machine{
 			name: "10.50.22.100",
 			metadata: map[string]string{
-				"role" : "kube",
+				"role": "kube",
 			},
 		},
 		&Machine{
 			name: "10.50.10.100",
 			metadata: map[string]string{
-				"role" : "etcd",
+				"role": "etcd",
 			},
 		},
 		&Machine{
 			name: "10.50.11.100",
 			metadata: map[string]string{
-				"role" : "etcd",
+				"role": "etcd",
 			},
 		},
 		&Machine{
 			name: "10.50.12.100",
 			metadata: map[string]string{
-				"role" : "etcd",
+				"role": "etcd",
 			},
 		},
 	}
 )
 
-type fakeFleetClient struct {}
+type fakeFleetClient struct{}
 
-func NewFakeFleetClient() (*fakeFleetClient, error) {
+func newFakeFleetClient() (*fakeFleetClient, error) {
 	return &fakeFleetClient{}, nil
 }
 
-func (r fakeFleetClient) GetMachines() ([]*Machine, error)  {
+func (r fakeFleetClient) GetMachines() ([]*Machine, error) {
 	return fleetMachines, nil
 }
-
-
-
