@@ -72,12 +72,15 @@ func main() {
 		// step: write the targets to file
 		if err := persistTargets(targets, config.prometheusFile); err != nil {
 			glog.Errorf("Failed to persist the targets to file: %s, error: %s", config.prometheusFile, err)
-		} else {
-			glog.V(4).Infof("Successfully wrote the targets (%d) to file: %s", len(targets.targets), config.prometheusFile)
 		}
 
 	NEXT_LOOP:
-		<-time.After(config.interval)
+		select {
+		case <-time.After(config.interval):
+		case <-signalChannel:
+			glog.Infof("Exitting the service")
+			os.Exit(0)
+		}
 	}
 }
 
@@ -152,6 +155,7 @@ func persistTargets(targets TargetGroups, filename string) error {
 		glog.Errorf("Failed to write to file: '%s', error: %s", filename, err)
 		return err
 	}
+	glog.V(4).Infof("Successfully wrote the targets to file: %s", filename)
 
 	return nil
 }

@@ -42,6 +42,6 @@ release: static
 	rm -f release/${NAME}
 
 clean:
-	rm -f ./bin/${NAME}
+	rm -rf ./bin
 	rm -rf ./release
 	go clean
