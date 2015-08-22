@@ -88,6 +88,12 @@ Would produce the following prometheus targets;
 Vairous, but I've deployed  prometheus server within [kubernetes](https://github.com/kubernetes/kubernetes), thus the deployment pattern for me is a pod containing prometheus and a collection of endpoint discovery containers which share a filesystem via the empthPath volume. The discovery containers simply write their *.yaml files to /etc/prometheus/targets.d which are picked up on intervals by the services [file discovery](http://prometheus.io/blog/2015/06/01/advanced-service-discovery/) plugin.
 
 ```YAML
+#
+#   Date: 2015-07-20 16:46:35 +0100 (Mon, 20 Jul 2015)
+#
+#  vim:ts=2:sw=2:et
+#
+---
 apiVersion: v1
 kind: ReplicationController
 metadata:
@@ -106,27 +112,32 @@ spec:
         image: gambol99/prometheus-k8s
         args:
           - -config=/etc/prometheus/targets.d
+          - -bearer-token-file=/etc/tokens/node-register.token
+          - -api=10.101.0.1
           - -api-protocol=https
+          - -insecure=true
           - -logtostderr=true
           - -v=3
           - -nodes=false
         volumeMounts:
         - name: targets
           mountPath: /etc/prometheus/targets.d
+        - name: tokens
+          mountPath: /etc/tokens/node-register.token
       - name: prometheus-fleet
-        image: gambol99/prometheus-fleet
+        image: gambol99/prometheus-fleet:0.0.1
         args:
-	        - -config=/etc/prometheus/targets.d/fleet-nodes.yaml
-          - -job='compute;role=kubernetes;9100'
-          - -job='etcd;role=etcd;9100'
-          - -job='ceph_store;role=ceph_store;9100'
-          - -job='ceph_monitor;role=ceph_monitor;9100'
+          - -config=/etc/prometheus/targets.d/fleet-nodes.yml
+          - -job=compute;role=kubernetes;9100
+          - -job=etcd;role=etcd;9100
+          - -job=ceph_store;role=ceph_store;9100
+          - -job=ceph_monitor;role=ceph_monitor;9100
           - -all
           - -logtostderr=true
           - -v=3
         volumeMounts:
         - name: fleet
-	      mountPath: /var/run/fleet.socket
+          mountPath: /var/run/fleet.sock
         - name: targets
           mountPath: /etc/prometheus/targets.d
       - name: prometheus
@@ -143,12 +154,16 @@ spec:
           mountPath: /etc/prometheus/targets.d
       imagePullPolicy: Always
       volumes:
+      - name: tokens
+        hostPath:
+          path: /run/kube-kubelet/node-register.token
       - name: targets
         source:
           emptyDir: {}
       - name: fleet
         hostPath:
-	      path: /var/run/fleet.socket
+          path: /var/run/fleet.sock
+
 ```
 
 #### **Status / Todo List**
