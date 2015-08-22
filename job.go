@@ -23,7 +23,7 @@ import (
 )
 
 var (
-	jobRegex = regexp.MustCompile("^([a-zA-Z0-9]*);([a-zA-Z0-9]+)=([a-zA-Z0-9]+);([0-9]{1,5})")
+	jobRegex = regexp.MustCompile("^[\"]?([a-zA-Z0-9]*);([a-zA-Z0-9]+)=([a-zA-Z0-9]+);([0-9]{1,5})")
 )
 
 func (r Job) String() string {
