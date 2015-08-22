@@ -5,7 +5,7 @@
 #  vim:ts=2:sw=2:et
 #
 
-NAME=promethues-fleet
+NAME=prometheus-fleet
 AUTHOR=gambol99
 HARDWARE=$(shell uname -m)
 VERSION=$(shell awk '/const Version/ { print $$4 }' version.go | sed 's/"//g')
@@ -21,7 +21,7 @@ build:
 
 static:
 	mkdir -p bin
-	CGO_ENABLED=0 GOOS=linux go build -a -tags netgo -ldflags '-w' -o bin/prometheus-fleet
+	CGO_ENABLED=0 GOOS=linux go build -a -tags netgo -ldflags '-w' -o bin/${NAME}
 
 docker: clean static
 	sudo docker build -t ${AUTHOR}/${NAME} .

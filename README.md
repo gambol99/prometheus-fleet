@@ -1,12 +1,12 @@
-[![Build Status](https://travis-ci.org/gambol99/promethues-fleet.svg?branch=master)](https://travis-ci.org/gambol99/promethues-fleet)
-[![GoDoc](http://godoc.org/github.com/gambol99/promethues-fleet?status.png)](http://godoc.org/github.com/gambol99/promethues-fleet)
+[![Build Status](https://travis-ci.org/gambol99/prometheus-fleet.svg?branch=master)](https://travis-ci.org/gambol99/prometheus-fleet)
+[![GoDoc](http://godoc.org/github.com/gambol99/prometheus-fleet?status.png)](http://godoc.org/github.com/gambol99/prometheus-fleet)
 
 ### **Prometheus Fleet**
 ---
-The service is used to generate one or more prometheus endpoints from machines in a fleet (CoreOS) cluster. You can slice and dice the machines up by fleet metadata and generate various promethus jobs from them.
+The service is used to generate one or more prometheus endpoints from machines in a fleet (CoreOS) cluster. You can slice and dice the machines up by fleet metadata and generate various prometheus jobs from them.
 
 ```shell
-    Usage of bin/promethues-fleet:
+    Usage of bin/prometheus-fleet:
       -all=false: include all nodes, even those not matched by a job spec; these will be placed into the default group
       -alsologtostderr=false: log to standard error as well as files
       -config="/etc/prometheus/targets.d/nodes.yaml": the location to write the nodes configuration
@@ -65,7 +65,7 @@ d5270139...	10.50.20.100	env=prod,private_ipv4=10.50.20.100,region=eu-west-1,rol
 faca46da...	10.50.10.200	env=prod,private_ipv4=10.50.10.200,region=eu-west-1,role=etcd
 ```
 
-Would produce the following promethues targets;
+Would produce the following prometheus targets;
 
 ```YAML
  - targets: ['10.50.2.213:9100', '10.50.0.248:9100', '10.50.1.79:9100']

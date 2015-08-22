@@ -7,7 +7,7 @@
 FROM progrium/busybox
 MAINTAINER Rohith <gambol99@gmail.com>
 
-ADD bin/prometheus-fleet /bin/prometheus-fleet
-RUN chmod +x /bin/prometheus-fleet
+ADD bin/prometheus-fleet /prometheus-fleet
+RUN chmod +x prometheus-fleet
 
-ENTRYPOINT [ "/bin/prometheus-fleet" ]
+ENTRYPOINT [ "/prometheus-fleet" ]
