@@ -102,6 +102,7 @@ func produceFilteredTargets(jobs *Jobs, machines []*Machine) TargetGroups {
 	// step: for each of the jobs we need to produce the targets
 	for _, job := range jobs.items {
 		target := groups.AddTarget(job.name)
+		target.Labels[job.tagValue] = job.tagValue
 		glog.V(6).Infof("Processing the %d machines against the job: %s", len(machines), job)
 		// step: iterate the machines and find any one that matches our metadata
 		for _, machine := range machines {
